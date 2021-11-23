@@ -6,7 +6,6 @@ public class KafkaClientCustomAuthentication extends KafkaClientAuthentication {
 
     public static final String TYPE_CUSTOM = "custom";
     private String saslMechanism;
-    private String securityProtocol;
     private String saslJaasConfig;
     private String saslLoginCallbackHandlerClass;
 
@@ -23,15 +22,6 @@ public class KafkaClientCustomAuthentication extends KafkaClientAuthentication {
 
     public void setSaslMechanism(String saslMechanism) {
         this.saslMechanism = saslMechanism;
-    }
-
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    public String getSecurityProtocol() {
-        return securityProtocol;
-    }
-
-    public void setSecurityProtocol(String securityProtocol) {
-        this.securityProtocol = securityProtocol;
     }
 
     @JsonInclude(JsonInclude.Include.NON_NULL)

@@ -415,7 +415,6 @@ public class KafkaMirrorMaker2AssemblyOperator extends AbstractConnectOperator<K
             else if(KafkaClientCustomAuthentication.TYPE_CUSTOM.equals(clientAuthType)) {
                 KafkaClientCustomAuthentication customAuthentication  = (KafkaClientCustomAuthentication) cluster.getAuthentication();
                 saslMechanism = customAuthentication.getSaslMechanism().isEmpty() ? "OAUTHBEARER" : customAuthentication.getSaslMechanism();
-                securityProtocol = customAuthentication.getSecurityProtocol().isEmpty() ? "SASL_SSL" : customAuthentication.getSecurityProtocol();
                 jaasConfig = customAuthentication.getSaslJaasConfig().isEmpty()
                         ? "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required " : customAuthentication.getSaslJaasConfig();
                 String saslLoginCallbackHandlerClass = customAuthentication.getSaslLoginCallbackHandlerClass().isEmpty() ? "" : customAuthentication.getSaslMechanism();
