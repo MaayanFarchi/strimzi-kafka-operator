@@ -243,6 +243,7 @@ spec:
                           - scram-sha-512
                           - plain
                           - oauth
+                          - custom
                           description: Authentication type. Currently the only supported
                             types are `tls`, `scram-sha-512`, and `plain`. `scram-sha-512`
                             type uses SASL SCRAM-SHA-512 Authentication. `plain` type
@@ -253,6 +254,15 @@ spec:
                         username:
                           type: string
                           description: Username used for the authentication.
+                        saslMechanism:
+                          type: string
+                          description: POC
+                        saslJaasConfig:
+                          type: string
+                          description: POC
+                        saslLoginCallbackHandlerClass:
+                          type: string
+                          description: POC
                       required:
                       - type
                       description: Authentication configuration for connecting to
