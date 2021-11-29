@@ -5,8 +5,8 @@
 watchNamespaces: []
 watchAnyNamespace: false
 
-defaultImageRegistry: rsmcasacr.azurecr.io
-defaultImageRepository: rsmcasacr
+defaultImageRegistry: quay.io
+defaultImageRepository: strimzi
 defaultImageTag: latest
 
 image:

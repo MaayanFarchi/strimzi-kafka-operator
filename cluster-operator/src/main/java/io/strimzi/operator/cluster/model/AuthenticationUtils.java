@@ -10,14 +10,11 @@ import io.fabric8.kubernetes.api.model.VolumeMount;
 import io.strimzi.api.kafka.model.CertSecretSource;
 import io.strimzi.api.kafka.model.KafkaJmxAuthentication;
 import io.strimzi.api.kafka.model.KafkaJmxAuthenticationPassword;
-import io.strimzi.api.kafka.model.authentication.KafkaClientCustomAuthentication;
-import io.strimzi.api.kafka.model.authentication.KafkaClientAuthenticationTls;
-import io.strimzi.api.kafka.model.authentication.KafkaClientAuthenticationScramSha512;
-import io.strimzi.api.kafka.model.authentication.KafkaClientAuthenticationPlain;
-import io.strimzi.api.kafka.model.authentication.KafkaClientAuthenticationOAuth;
 import io.strimzi.api.kafka.model.authentication.KafkaClientAuthentication;
-
-
+import io.strimzi.api.kafka.model.authentication.KafkaClientAuthenticationOAuth;
+import io.strimzi.api.kafka.model.authentication.KafkaClientAuthenticationPlain;
+import io.strimzi.api.kafka.model.authentication.KafkaClientAuthenticationScramSha512;
+import io.strimzi.api.kafka.model.authentication.KafkaClientAuthenticationTls;
 import io.strimzi.kafka.oauth.client.ClientConfig;
 import io.strimzi.kafka.oauth.server.ServerConfig;
 
@@ -276,8 +273,6 @@ public class AuthenticationUtils {
                 if (oauth.getMaxTokenExpirySeconds() > 0) options.add(String.format("%s=\"%s\"", ClientConfig.OAUTH_MAX_TOKEN_EXPIRY_SECONDS, oauth.getMaxTokenExpirySeconds()));
 
                 properties.put(OAUTH_CONFIG, String.join(" ", options));
-            } else if (authentication instanceof KafkaClientCustomAuthentication) {
-                properties.put(SASL_MECHANISM, KafkaClientCustomAuthentication.TYPE_CUSTOM);
             }
         }
         

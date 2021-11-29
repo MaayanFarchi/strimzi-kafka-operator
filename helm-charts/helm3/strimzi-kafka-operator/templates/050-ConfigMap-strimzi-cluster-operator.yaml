@@ -4,7 +4,6 @@ metadata:
   name: {{ .Values.logConfigMap }}
   labels:
     app: strimzi
-    aadpodidbinding: flinkpods
 data:
   log4j2.properties: |
     name = COConfig
