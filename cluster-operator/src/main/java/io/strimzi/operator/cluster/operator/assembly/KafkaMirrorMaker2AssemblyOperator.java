@@ -19,7 +19,11 @@ import java.util.stream.Stream;
 
 import io.fabric8.kubernetes.client.CustomResource;
 import io.strimzi.api.kafka.model.KafkaMirrorMaker2Spec;
-import io.strimzi.api.kafka.model.authentication.*;
+import io.strimzi.api.kafka.model.authentication.KafkaClientAuthenticationOAuth;
+import io.strimzi.api.kafka.model.authentication.KafkaClientAuthenticationPlain;
+import io.strimzi.api.kafka.model.authentication.KafkaClientAuthenticationScramSha512;
+import io.strimzi.api.kafka.model.authentication.KafkaClientAuthenticationTls;
+import io.strimzi.api.kafka.model.authentication.KafkaClientCustomAuthentication;
 import io.strimzi.api.kafka.model.status.Condition;
 import io.strimzi.operator.cluster.model.AbstractModel;
 import io.strimzi.operator.common.Annotations;
@@ -310,8 +314,9 @@ public class KafkaMirrorMaker2AssemblyOperator extends AbstractConnectOperator<K
     @SuppressWarnings("deprecation")
     private static void prepareMirrorMaker2ConnectorConfig(Reconciliation reconciliation, KafkaMirrorMaker2MirrorSpec mirror, KafkaMirrorMaker2ClusterSpec sourceCluster, KafkaMirrorMaker2ClusterSpec targetCluster, KafkaConnectorSpec connectorSpec, KafkaMirrorMaker2Cluster mirrorMaker2Cluster) {
         Map<String, Object> config = connectorSpec.getConfig();
-        addClusterToMirrorMaker2ConnectorConfig(config, targetCluster, TARGET_CLUSTER_PREFIX);
-        addClusterToMirrorMaker2ConnectorConfig(config, sourceCluster, SOURCE_CLUSTER_PREFIX);
+        LOGGER.warnCr(reconciliation, "POC: calling addClusterToMirrorMaker2ConnectorConfig");
+        addClusterToMirrorMaker2ConnectorConfig(reconciliation, config, targetCluster, TARGET_CLUSTER_PREFIX);
+        addClusterToMirrorMaker2ConnectorConfig(reconciliation, config, sourceCluster, SOURCE_CLUSTER_PREFIX);
 
         if (mirror.getTopicsPattern() != null) {
             config.put("topics", mirror.getTopicsPattern());
@@ -349,7 +354,7 @@ public class KafkaMirrorMaker2AssemblyOperator extends AbstractConnectOperator<K
         config.putAll(mirror.getAdditionalProperties());
     }
 
-    private static void addClusterToMirrorMaker2ConnectorConfig(Map<String, Object> config, KafkaMirrorMaker2ClusterSpec cluster, String configPrefix) {
+    private static void addClusterToMirrorMaker2ConnectorConfig(Reconciliation reconciliation, Map<String, Object> config, KafkaMirrorMaker2ClusterSpec cluster, String configPrefix) {
         config.put(configPrefix + "alias", cluster.getAlias());
         config.put(configPrefix + AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, cluster.getBootstrapServers());
 
@@ -411,14 +416,13 @@ public class KafkaMirrorMaker2AssemblyOperator extends AbstractConnectOperator<K
                 saslMechanism = "OAUTHBEARER";
                 jaasConfig = oauthJaasConfig.toString();
                 config.put(configPrefix + SaslConfigs.SASL_LOGIN_CALLBACK_HANDLER_CLASS, "io.strimzi.kafka.oauth.client.JaasClientOauthLoginCallbackHandler");
-            }
-            else if(KafkaClientCustomAuthentication.TYPE_CUSTOM.equals(clientAuthType)) {
+            } else if (KafkaClientCustomAuthentication.TYPE_CUSTOM.equals(clientAuthType)) {
+                LOGGER.warnCr(reconciliation, "POC: KafkaClientCustomAuthentication equals to clientAuthType");
                 KafkaClientCustomAuthentication customAuthentication  = (KafkaClientCustomAuthentication) cluster.getAuthentication();
                 saslMechanism = customAuthentication.getSaslMechanism().isEmpty() ? "OAUTHBEARER" : customAuthentication.getSaslMechanism();
                 jaasConfig = customAuthentication.getSaslJaasConfig().isEmpty()
-                        ? "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required " : customAuthentication.getSaslJaasConfig();
-                String saslLoginCallbackHandlerClass = customAuthentication.getSaslLoginCallbackHandlerClass().isEmpty() ? "" : customAuthentication.getSaslMechanism();
-
+                        ? "org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule required;" : customAuthentication.getSaslJaasConfig();
+                String saslLoginCallbackHandlerClass = customAuthentication.getSaslLoginCallbackHandlerClass().isEmpty() ? "" : customAuthentication.getSaslLoginCallbackHandlerClass();
                 config.put(configPrefix + SaslConfigs.SASL_LOGIN_CALLBACK_HANDLER_CLASS, saslLoginCallbackHandlerClass);
             }
 
