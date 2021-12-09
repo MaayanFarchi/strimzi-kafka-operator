@@ -37,6 +37,9 @@ public class AuthenticationUtils {
     public static final String SASL_PASSWORD_FILE = "SASL_PASSWORD_FILE";
     public static final String SASL_MECHANISM = "SASL_MECHANISM";
     public static final String OAUTH_CONFIG = "OAUTH_CONFIG";
+    public static final String CUSTOM_SASL_MECHANISM = "CUSTOM_SASL_MECHANISM";
+    public static final String SASL_JAAS_CONFIG = "SASL_JAAS_CONFIG";
+    public static final String SASL_LOGIN_CALLBACK_HANDLER_CLASS = "SASL_LOGIN_CALLBACK_HANDLER_CLASS";
 
     /**
      * Validates Kafka client authentication for all components based on Apache Kafka clients.
@@ -78,6 +81,11 @@ public class AuthenticationUtils {
                     // This way the condition is easier to read and understand.
                 } else {
                     throw new InvalidResourceException("OAUTH authentication selected, but some options are missing. You have to specify one of the following commbinations: [accessToken], [tokenEndpointUri, clientId, refreshToken], [tokenEndpointUri, clientId, clientsecret].");
+                }
+            } else if (authentication instanceof KafkaClientCustomAuthentication) {
+                KafkaClientCustomAuthentication auth = (KafkaClientCustomAuthentication) authentication;
+                if (auth.getSaslMechanism() == null || auth.getSaslLoginCallbackHandlerClass() == null || auth.getSaslJaasConfig() == null) {
+                    throw new InvalidResourceException("Custom authentication selected, all of the following fields should be provided: saslMechanism, saslLoginCallbackHandlerClass, saslJaasConfig");
                 }
             }
         }
@@ -277,7 +285,11 @@ public class AuthenticationUtils {
 
                 properties.put(OAUTH_CONFIG, String.join(" ", options));
             } else if (authentication instanceof KafkaClientCustomAuthentication) {
+                KafkaClientCustomAuthentication oauth = (KafkaClientCustomAuthentication) authentication;
                 properties.put(SASL_MECHANISM, KafkaClientCustomAuthentication.TYPE_CUSTOM);
+                properties.put(CUSTOM_SASL_MECHANISM, oauth.getSaslMechanism());
+                properties.put(SASL_JAAS_CONFIG, oauth.getSaslJaasConfig());
+                properties.put(SASL_LOGIN_CALLBACK_HANDLER_CLASS, oauth.getSaslLoginCallbackHandlerClass());
             }
         }
         

@@ -118,8 +118,10 @@ public class KafkaConnectCluster extends AbstractModel {
     protected static final String ENV_VAR_KAFKA_CONNECT_JMX_ENABLED = "KAFKA_CONNECT_JMX_ENABLED";
     protected static final String ENV_VAR_KAFKA_CONNECT_JMX_USERNAME = "KAFKA_CONNECT_JMX_USERNAME";
     protected static final String ENV_VAR_KAFKA_CONNECT_JMX_PASSWORD = "KAFKA_CONNECT_JMX_PASSWORD";
-
     protected static final String CO_ENV_VAR_CUSTOM_CONNECT_POD_LABELS = "STRIMZI_CUSTOM_KAFKA_CONNECT_LABELS";
+    protected static final String ENV_VAR_KAFKA_CONNECT_CUSTOM_SASL_MECHANISM = "KAFKA_CONNECT_CUSTOM_SASL_MECHANISM";
+    protected static final String ENV_VAR_KAFKA_CONNECT_SASL_JAAS_CONFIG = "KAFKA_CONNECT_SASL_JAAS_CONFIG";
+    protected static final String ENV_VAR_KAFKA_CONNECT_SASL_LOGIN_CALLBACK_HANDLER_CLASS = "KAFKA_CONNECT_SASL_LOGIN_CALLBACK_HANDLER_CLASS";
 
     private Rack rack;
     private String initImage;

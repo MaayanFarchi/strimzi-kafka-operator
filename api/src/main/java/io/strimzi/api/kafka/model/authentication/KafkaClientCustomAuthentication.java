@@ -34,8 +34,8 @@ public class KafkaClientCustomAuthentication extends KafkaClientAuthentication {
     }
 
 
-    @Description("Options are; OAUTHBEARER/PLAIN")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Description("SASL mechanism used for client connections. This may be any mechanism for which a security provider is available.")
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public String getSaslMechanism() {
         return saslMechanism;
     }
@@ -45,8 +45,10 @@ public class KafkaClientCustomAuthentication extends KafkaClientAuthentication {
     }
 
 
-    @Description("Default is org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Description("As part of enabling any of the SASL authentication mechanisms, " +
+            "you must provide Java Authentication and Authorization Service (JAAS) configurations. " +
+            "You can check kafka documentation for details under 'Authentication with SASL'.\n")
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public String getSaslJaasConfig() {
         return saslJaasConfig;
     }
@@ -55,8 +57,9 @@ public class KafkaClientCustomAuthentication extends KafkaClientAuthentication {
         this.saslJaasConfig = saslJaasConfig;
     }
 
-    @Description("The call back login class you extend the image with")
-    @JsonInclude(JsonInclude.Include.NON_NULL)
+    @Description("The fully qualified name of a SASL login callback handler class that implements the AuthenticateCallbackHandler interface," +
+            "you can add your own impl by extending the Kafka client image and putting your own jar under /opt/kafka/libs.")
+    @JsonInclude(JsonInclude.Include.NON_DEFAULT)
     public String getSaslLoginCallbackHandlerClass() {
         return saslLoginCallbackHandlerClass;
     }

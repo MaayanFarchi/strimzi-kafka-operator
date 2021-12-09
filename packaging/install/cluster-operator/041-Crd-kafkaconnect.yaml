@@ -192,13 +192,18 @@ spec:
                       server.
                   saslJaasConfig:
                     type: string
-                    description: Default is org.apache.kafka.common.security.oauthbearer.OAuthBearerLoginModule.
+                    description: |
+                      As part of enabling any of the SASL authentication mechanisms, you must provide Java Authentication and Authorization Service (JAAS) configurations. You can check kafka documentation for details under 'Authentication with SASL'.
                   saslLoginCallbackHandlerClass:
                     type: string
-                    description: The call back login class you extend the image with.
+                    description: The fully qualified name of a SASL login callback
+                      handler class that implements the AuthenticateCallbackHandler
+                      interface,you can add your own impl by extending the Kafka client
+                      image and putting your own jar under /opt/kafka/libs.
                   saslMechanism:
                     type: string
-                    description: Options are; OAUTHBEARER/PLAIN.
+                    description: SASL mechanism used for client connections. This
+                      may be any mechanism for which a security provider is available.
                   scope:
                     type: string
                     description: OAuth scope to use when authenticating against the
