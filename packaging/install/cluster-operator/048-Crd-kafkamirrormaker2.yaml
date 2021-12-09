@@ -208,6 +208,21 @@ spec:
                           description: Link to Kubernetes Secret containing the refresh
                             token which can be used to obtain access token from the
                             authorization server.
+                        saslJaasConfig:
+                          type: string
+                          description: |
+                            As part of enabling any of the SASL authentication mechanisms, you must provide Java Authentication and Authorization Service (JAAS) configurations. You can check kafka documentation for details under 'Authentication with SASL'.
+                        saslLoginCallbackHandlerClass:
+                          type: string
+                          description: The fully qualified name of a SASL login callback
+                            handler class that implements the AuthenticateCallbackHandler
+                            interface,you can add your own impl by extending the Kafka
+                            client image and putting your own jar under /opt/kafka/libs.
+                        saslMechanism:
+                          type: string
+                          description: SASL mechanism used for client connections.
+                            This may be any mechanism for which a security provider
+                            is available.
                         scope:
                           type: string
                           description: OAuth scope to use when authenticating against
@@ -243,6 +258,7 @@ spec:
                           - scram-sha-512
                           - plain
                           - oauth
+                          - custom
                           description: Authentication type. Currently the only supported
                             types are `tls`, `scram-sha-512`, and `plain`. `scram-sha-512`
                             type uses SASL SCRAM-SHA-512 Authentication. `plain` type
